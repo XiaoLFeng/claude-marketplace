@@ -1,7 +1,7 @@
 {
-  "name": "llm-memory",
+  "name": "llm-memory-mcp",
   "version": "1.1.0",
-  "description": "智能工作流管理助手 - 提供计划、待办、记忆的完整管理方案，支持 CLI 和 MCP 双模式",
+  "description": "智能工作流管理助手（MCP 版本）- 使用 MCP 工具直接管理计划、待办和记忆",
   "author": {
     "name": "xiao_lfeng",
     "email": "gm@x-lf.cn"
@@ -9,7 +9,6 @@
   "homepage": "https://www.x-lf.com",
   "repository": "https://github.com/xiao_lfeng/claude-marketplace",
   "license": "Apache-2.0",
-  "keywords": ["memory", "plan", "todo", "workflow", "productivity", "mcp"],
-  "skills": "./skills/",
+  "keywords": ["memory", "plan", "todo", "workflow", "mcp"],
   "mcpServers": "./.mcp.json"
 }
