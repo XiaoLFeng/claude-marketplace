@@ -1,25 +1,39 @@
 {
-  "name": "llmemory-tools",
+  "name": "xlf-tools",
   "owner": {
     "name": "xiao_lfeng",
     "email": "gm@x-lf.cn"
   },
   "metadata": {
-    "description": "LLM Memory management tools - Plan, Todo, Memory, and Group management with intelligent workflow orchestration",
-    "version": "1.0.0"
+    "description": "xlf-tools 插件集合",
+    "icon": "https://www.x-lf.com/favicon.png",
+    "homepage": "https://www.x-lf.com",
+    "version": "1.1.0"
   },
   "plugins": [
     {
       "name": "llm-memory",
       "source": "./llm-memory",
-      "description": "智能工作流管理助手 - 提供计划、待办、记忆的完整管理方案，支持批量操作和作用域隔离（需要提前安装 llm-memory 插件）",
-      "version": "1.0.0",
+      "description": "智能工作流管理助手 - 提供计划、待办、记忆的完整管理方案，支持 CLI 和 MCP 双模式（CLI 版本需提前安装 llm-memory 工具，MCP 版本需配置 llm-memory MCP Server）",
+      "version": "1.1.0",
       "author": {
         "name": "xiao_lfeng",
         "email": "gm@x-lf.cn"
       },
       "category": "productivity",
-      "tags": ["memory", "plan", "todo", "workflow", "productivity"]
+      "tags": ["memory", "plan", "todo", "workflow", "productivity", "mcp"],
+      "skills": [
+        {
+          "name": "llm-workflow",
+          "description": "CLI 版本工作流管理，使用 llm-memory CLI 命令",
+          "path": "./skills/llm-workflow"
+        },
+        {
+          "name": "llm-workflow-mcp",
+          "description": "MCP 版本工作流管理，使用 MCP 工具直接调用知识库",
+          "path": "./skills/llm-workflow-mcp"
+        }
+      ]
     }
   ]
 }

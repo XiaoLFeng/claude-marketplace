@@ -1,0 +1,6 @@
+{
+  "llm-memory": {
+    "command": "llm-memory",
+    "args": ["mcp"]
+  }
+}
