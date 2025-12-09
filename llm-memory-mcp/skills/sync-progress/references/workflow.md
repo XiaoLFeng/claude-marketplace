@@ -1,4 +1,4 @@
-# Sync Progress 工作流参考
+# 同步进度工作流
 
 ## 完整工作流
 
@@ -31,14 +31,19 @@ plan-api-v2         →  todo-api-v2-*
 plan-refactor       →  todo-refactor-*
 ```
 
-### 策略 2: 显式关联（未来）
+### 策略 2: 项目名提取
 
 ```javascript
-// 未来可能支持的显式关联
-todo_create({
-  code: "todo-xxx",
-  plan_code: "plan-auth"  // 显式指定
-})
+function getRelatedTodos(planCode, todos) {
+  // plan-user-auth → user
+  const project = planCode.replace("plan-", "").split("-")[0];
+
+  // 匹配 todo-user-*, todo-auth-* 等
+  return todos.filter(t =>
+    t.code.includes(project) ||
+    t.code.startsWith(`todo-${project}`)
+  );
+}
 ```
 
 ## 进度计算示例

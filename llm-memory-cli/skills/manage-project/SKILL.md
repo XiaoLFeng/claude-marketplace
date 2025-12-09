@@ -1,28 +1,32 @@
 ---
 name: manage-project
-description: "项目计划管理器 - 管理复杂的多步骤项目。适用：任务复杂(>3步骤)、时间跨度长(>3天)、需要跟踪整体进度。不适用：单一简单任务用 manage-tasks。"
+description: "Project manager - Create and manage complex multi-step project plans. Use when: complex tasks (>3 steps), long timespan, need overall progress tracking (0-100%). Not for: simple tasks (use task-*), batch todo creation (use plan-tasks)."
 ---
 
 # Manage Project
 
-管理复杂的多步骤项目，跟踪长期目标和整体进度。
+创建和管理复杂的多步骤项目计划。
 
 ## 触发条件
 
 - 任务复杂（>3 步骤）
 - 时间跨度长（>3 天）
-- 用户说"帮我规划"、"制定方案"
+- 需要跟踪整体进度（0-100%）
+- 用户说"帮我规划"、"制定方案"、"创建计划"
 
-## 操作指南
+## 不触发条件
+
+- 单一简单任务 → 使用 task-* 系列
+- 批量创建 todos → 使用 plan-tasks
+- 同步进度 → 使用 sync-progress
+
+## 操作流程
 
 ### 创建计划
 
 ```bash
-llm-memory plan create \
-  --code "plan-user-auth" \
-  --title "用户认证系统" \
-  --description "重构认证系统" \
-  --content "## 步骤\n1. 设计\n2. 实现\n3. 测试"
+llm-memory plan add plan-user-auth "用户认证系统重构" \
+  --description "重构现有认证系统，支持 OAuth 和 JWT"
 ```
 
 ### 查看计划
@@ -31,37 +35,92 @@ llm-memory plan create \
 # 列出所有计划
 llm-memory plan list
 
-# 获取详情
-llm-memory plan get --code plan-user-auth
+# 获取计划详情
+llm-memory plan show plan-user-auth
 ```
 
 ### 更新进度
 
 ```bash
-llm-memory plan update --code plan-user-auth --progress 45
+# 进度自动转换状态: 0=待开始, 1-99=进行中, 100=已完成
+llm-memory plan update plan-user-auth --progress 45
 ```
 
-## Code 格式
+### 更新内容
+
+```bash
+llm-memory plan update plan-user-auth --title "新标题"
+llm-memory plan update plan-user-auth --description "新描述"
+```
+
+## Code 命名规范
 
 ```
-格式：plan-<描述>
-示例：plan-user-auth ✅
+格式: plan-<描述>
+正则: ^[a-z][a-z\-]*[a-z]$
+
+示例:
+  plan-user-auth        ✅
+  plan-api-refactor     ✅
+  Plan_001              ❌
 ```
 
 ## 进度与状态
 
-| 进度 | 状态 |
-|-----|------|
-| 0 | 待开始 |
-| 1-99 | 进行中 |
-| 100 | 已完成 |
+| 进度 | 状态 | 说明 |
+|-----|------|------|
+| 0 | pending | 待开始 |
+| 1-99 | in_progress | 进行中 |
+| 100 | completed | 已完成 |
 
-## CLI 命令清单
+## 使用场景
 
+### 场景 1: 新功能开发
+
+```markdown
+用户: "帮我规划用户认证系统的开发"
+
+1. 调用 manage-project 创建 Plan
+2. 调用 plan-tasks 创建关联的 Todos
+3. 调用 workflow-orchestrator 分配 Agent
+```
+
+### 场景 2: 更新进度
+
+```markdown
+完成一批任务后:
+
+1. 调用 sync-progress 自动计算
+2. 或手动: llm-memory plan update plan-xxx --progress 60
+```
+
+## 输出示例
+
+### 创建成功
+
+```
+✅ 计划已创建
+
+📋 [plan-user-auth] 用户认证系统重构
+   进度: 0% | 状态: 待开始
+```
+
+### 进度更新
+
+```
+✅ 进度已更新
+
+📋 [plan-user-auth] 用户认证系统重构
+   进度: 45% | 状态: 进行中
+   ████████░░░░░░░░░░░░
+```
+
+## CLI 命令
+
+- `llm-memory plan add <code> <title>` - 创建计划
 - `llm-memory plan list` - 列出计划
-- `llm-memory plan create` - 创建计划
-- `llm-memory plan get` - 获取详情
-- `llm-memory plan update` - 更新计划
+- `llm-memory plan show <code>` - 获取详情
+- `llm-memory plan update <code>` - 更新计划
 
 详见：
 - [命令详解](./references/commands.md)

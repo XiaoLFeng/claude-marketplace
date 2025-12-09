@@ -32,8 +32,7 @@ plan_create({
   code: "plan-xxx",           // 必填：唯一标识
   title: "计划标题",           // 必填：简洁描述
   description: "计划摘要",     // 必填：一句话概括
-  content: "详细内容...",      // 必填：Markdown 格式
-  scope: "personal"           // 可选：personal/group
+  content: "详细内容..."       // 必填：Markdown 格式
 })
 
 // 返回
@@ -104,28 +103,3 @@ plan_update({
 | personal | 当前目录私有（默认） |
 | group | 组内共享（需先加入组） |
 | all | 查询时返回全部可见 |
-
-## Content 格式建议
-
-使用 Markdown 格式组织计划内容：
-
-```markdown
-## 目标
-简述计划要达成的目标
-
-## 步骤
-1. 第一步
-2. 第二步
-3. 第三步
-
-## 验收标准
-- 标准 1
-- 标准 2
-
-## 风险
-- 潜在风险和应对策略
-
-## 时间线
-- 里程碑 1: 日期
-- 里程碑 2: 日期
-```
