@@ -1,11 +1,34 @@
 ---
 name: load-context
-description: "Context loader - Load relevant context for new conversation or Plan mode. Reads plan/todo/memory to get unfinished tasks and memories. Use when: new conversation starts, entering Plan mode, user asks about current status."
+description: "Context loader - Load relevant context for new conversation or Plan mode. AUTOMATICALLY INVOKED BY BOOTSTRAP SKILL. Reads plan/todo/memory to get unfinished tasks and memories. After completion, MUST invoke manage-project and plan-tasks. Use when: new conversation starts, entering Plan mode, user asks about current status."
 ---
 
 # Load Context
 
 新对话或 Plan 模式时加载相关上下文，帮助了解项目状态。
+
+## 调用来源
+
+- **bootstrap skill** (自动调用 - 新对话时) ← 主要来源
+- **用户请求** (手动触发)
+- **Plan 模式入口** (自动触发)
+
+## 级联调用链
+
+=====================================
+>>> SKILL CHAIN CONTINUATION <<<
+=====================================
+
+**本 SKILL 完成后，必须继续调用：**
+
+```
+[COMPLETED] bootstrap         - 会话初始化（已完成）
+[THIS]      load-context      - 加载上下文（当前）
+[NEXT]      manage-project    - 获取项目计划（必须调用）
+[NEXT]      plan-tasks        - 获取任务列表（必须调用）
+```
+
+**>>> 完成加载后，必须调用 manage-project 和 plan-tasks <<<**
 
 ## 触发条件
 
@@ -74,6 +97,21 @@ llm-memory memory search "auth"
 llm-memory plan show plan-user-auth
 ```
 
+### Step 5: 触发后续 SKILL (MANDATORY)
+
+=====================================
+>>> MUST INVOKE NEXT SKILLS <<<
+=====================================
+
+```bash
+# 完成 load-context 后，必须继续调用：
+# 1. manage-project - 获取项目详细状态
+# 2. plan-tasks - 获取任务详细列表
+```
+
+**>>> 调用 llm-memory-cli:manage-project <<<**
+**>>> 调用 llm-memory-cli:plan-tasks <<<**
+
 ## 输出示例
 
 ### 快速加载输出
@@ -90,7 +128,7 @@ llm-memory plan show plan-user-auth
   • [todo-auth-test] 集成测试 [Main]
   ...
 
-准备好继续工作了~
+>>> 继续调用 manage-project 和 plan-tasks...
 ```
 
 ### 深度加载输出
@@ -122,6 +160,8 @@ llm-memory plan show plan-user-auth
   • [mem-auth-decision] JWT vs Session 选型
 
 ═══════════════════════════════════════
+
+>>> 继续调用 manage-project 和 plan-tasks...
 ```
 
 ## CLI 命令
@@ -130,5 +170,11 @@ llm-memory plan show plan-user-auth
 - `llm-memory plan show <code>` - 获取计划详情
 - `llm-memory todo list` - 获取任务列表
 - `llm-memory memory search <keyword>` - 搜索记忆
+
+## 后续 SKILL
+
+**>>> 必须调用 (MANDATORY) <<<**
+- `manage-project` - 获取/管理项目计划
+- `plan-tasks` - 获取/管理任务列表
 
 详见：[加载策略](./references/loading-strategy.md)

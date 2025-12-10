@@ -1,11 +1,34 @@
 ---
 name: load-context
-description: "Context loader - Load relevant context for new conversation or Plan mode. Reads plan_list/todo_list/memory_search to get unfinished tasks and memories. Use when: new conversation starts, entering Plan mode, user asks about current status."
+description: "Context loader - Load relevant context for new conversation or Plan mode. AUTOMATICALLY INVOKED BY BOOTSTRAP SKILL. Reads plan_list/todo_list/memory_search to get unfinished tasks and memories. After completion, MUST invoke manage-project and plan-tasks. Use when: new conversation starts, entering Plan mode, user asks about current status."
 ---
 
 # Load Context
 
 新对话或 Plan 模式时加载相关上下文，帮助了解项目状态。
+
+## 调用来源
+
+- **bootstrap skill** (自动调用 - 新对话时) ← 主要来源
+- **用户请求** (手动触发)
+- **Plan 模式入口** (自动触发)
+
+## 级联调用链
+
+=====================================
+>>> SKILL CHAIN CONTINUATION <<<
+=====================================
+
+**本 SKILL 完成后，必须继续调用：**
+
+```
+[COMPLETED] bootstrap         - 会话初始化（已完成）
+[THIS]      load-context      - 加载上下文（当前）
+[NEXT]      manage-project    - 获取项目计划（必须调用）
+[NEXT]      plan-tasks        - 获取任务列表（必须调用）
+```
+
+**>>> 完成加载后，必须调用 manage-project 和 plan-tasks <<<**
 
 ## 触发条件
 
@@ -106,6 +129,21 @@ for (const plan of inProgress.slice(0, 3)) {
 }
 ```
 
+### Step 5: 触发后续 SKILL (MANDATORY)
+
+=====================================
+>>> MUST INVOKE NEXT SKILLS <<<
+=====================================
+
+```javascript
+// 完成 load-context 后，必须继续调用：
+// 1. manage-project - 获取项目详细状态
+// 2. plan-tasks - 获取任务详细列表
+```
+
+**>>> 调用 llm-memory-mcp:manage-project <<<**
+**>>> 调用 llm-memory-mcp:plan-tasks <<<**
+
 ## 输出示例
 
 ### 快速加载输出
@@ -123,7 +161,7 @@ for (const plan of inProgress.slice(0, 3)) {
   • [todo-api-endpoints] API 端点 [Task-B]
   ...
 
-准备好继续工作了~
+>>> 继续调用 manage-project 和 plan-tasks...
 ```
 
 ### 深度加载输出
@@ -166,7 +204,7 @@ for (const plan of inProgress.slice(0, 3)) {
 
 ═══════════════════════════════════════
 
-上下文加载完成，可以开始规划~
+>>> 继续调用 manage-project 和 plan-tasks...
 ```
 
 ## MCP 工具
@@ -176,5 +214,11 @@ for (const plan of inProgress.slice(0, 3)) {
 - `todo_list` - 获取任务列表
 - `memory_search` - 搜索记忆
 - `memory_get` - 获取记忆详情
+
+## 后续 SKILL
+
+**>>> 必须调用 (MANDATORY) <<<**
+- `manage-project` - 获取/管理项目计划
+- `plan-tasks` - 获取/管理任务列表
 
 详见：[加载策略](./references/loading-strategy.md)
