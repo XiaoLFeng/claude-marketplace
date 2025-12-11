@@ -12,25 +12,10 @@
   },
   "plugins": [
     {
-      "name": "llm-memory-cli",
-      "source": "./llm-memory-cli",
-      "description": "智能工作流管理助手（CLI 版本）- 使用 llm-memory CLI 命令管理计划、待办和记忆（需提前安装 llm-memory 工具）",
-      "version": "1.1.0",
-      "author": {
-        "name": "xiao_lfeng",
-        "email": "gm@x-lf.cn"
-      },
-      "category": "productivity",
-      "tags": ["memory", "plan", "todo", "workflow", "cli"],
-      "homepage": "https://www.x-lf.com",
-      "repository": "https://github.com/xiao_lfeng/claude-marketplace",
-      "license": "MIT"
-    },
-    {
-      "name": "llm-memory-mcp",
-      "source": "./llm-memory-mcp",
-      "description": "智能工作流管理助手（MCP 版本）- 使用 MCP 工具直接管理计划、待办和记忆（需提前安装 llm-memory 工具）",
-      "version": "1.1.0",
+      "name": "llm-memory",
+      "source": "./llm-memory",
+      "description": "智能工作流管理助手- 使用 MCP 工具直接管理计划、待办和记忆（需提前安装 llm-memory 工具）",
+      "version": "1.1.1",
       "author": {
         "name": "xiao_lfeng",
         "email": "gm@x-lf.cn"
